@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Users</title>
+  <style>
+    body { font-family: Arial; background:#f4f6f9; }
+    table {
+      width:80%;
+      margin:auto;
+      margin-top:50px;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding:10px;
+      border:1px solid #ccc;
+      text-align:center;
+    }
+    button {
+      padding:5px 10px;
+      margin:2px;
+      border:none;
+      color:white;
+      cursor:pointer;
+    }
+    .delete { background:red; }
+    .update { background:orange; }
+  </style>
+</head>
+<body>
+
+<h2 style="text-align:center;">Users</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="table"></tbody>
+</table>
+
+<script>
+async function loadUsers(){
+  const res = await fetch("http://localhost:8006/users");
+  const data = await res.json();
+
+  table.innerHTML = "";
+
+  data.forEach(u=>{
+    table.innerHTML += `
+      <tr>
+        <td>${u.name}</td>
+        <td>${u.email}</td>
+        <td>
+          <button class="delete" onclick="del('${u._id}')">Delete</button>
+          <button class="update" onclick="upd('${u._id}')">Update</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+async function del(id){
+  await fetch("http://localhost:8006/delete/"+id,{method:"DELETE"});
+  loadUsers();
+}
+
+async function upd(id){
+  await fetch("http://localhost:8006/update/"+id,{method:"PATCH"});
+  loadUsers();
+}
+
+loadUsers();
+</script>
+
+</body>
+</html>

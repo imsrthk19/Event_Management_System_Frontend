@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <style>
+    body { font-family: Arial; background:#f4f6f9; }
+    .container { width:300px; margin:auto; margin-top:100px; }
+    input, button { width:100%; padding:10px; margin:10px 0; }
+    button { background:#0d6efd; color:white; border:none; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Login</h2>
+
+  <form id="loginForm">
+    <input placeholder="User ID" id="id">
+    <button>Login</button>
+  </form>
+
+  <p id="msg"></p>
+</div>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", async (e)=>{
+  e.preventDefault();
+
+  const res = await fetch("http://localhost:8006/login/" + id.value);
+
+  if(res.ok){
+    const user = await res.json();
+    msg.innerHTML = "Welcome " + user.name;
+  } else {
+    msg.innerHTML = "User not found";
+  }
+});
+</script>
+
+</body>
+</html>

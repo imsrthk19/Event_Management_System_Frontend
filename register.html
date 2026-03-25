@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+  <style>
+    body { font-family: Arial; background:#f4f6f9; }
+    .container { width:300px; margin:auto; margin-top:100px; }
+    input, button { width:100%; padding:10px; margin:10px 0; }
+    button { background:#198754; color:white; border:none; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Register</h2>
+
+  <form id="form">
+    <input placeholder="First Name" id="name">
+    <input placeholder="Last Name" id="last_name">
+    <input placeholder="Email" id="email">
+    <input type="password" placeholder="Password" id="password">
+    <button>Register</button>
+  </form>
+
+  <p id="msg"></p>
+</div>
+
+<script>
+document.getElementById("form").addEventListener("submit", async (e)=>{
+  e.preventDefault();
+
+  const res = await fetch("http://localhost:8006/api/register", {
+    method:"POST",
+    headers:{"Content-Type":"application/x-www-form-urlencoded"},
+    body:new URLSearchParams({
+      name:name.value,
+      last_name:last_name.value,
+      email:email.value,
+      hashedPassword:password.value
+    })
+  });
+
+  msg.innerHTML = res.ok ? "Registered Successfully" : "Error";
+});
+</script>
+
+</body>
+</html>
