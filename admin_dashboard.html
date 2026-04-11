@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | NexEvent</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Styling -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .dashboard-header {
+            padding: 8rem 0 4rem;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(253, 121, 168, 0.2), var(--bg-color));
+        }
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .admin-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            border: 4px solid var(--glass-border);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            color: white;
+            font-family: inherit;
+            outline: none;
+            transition: var(--transition);
+        }
+        .form-control:focus {
+            border-color: var(--accent-color);
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .event-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+        
+        .event-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .event-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .event-card p {
+            margin-bottom: 0.2rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .btn-danger {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            margin-top: 1rem;
+            width: 100%;
+        }
+        
+        .btn-danger:hover {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .grid-2-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        @media(max-width: 768px){
+            .grid-2-col {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="bg-blobs">
+        <div class="blob blob-1" style="background: radial-gradient(circle, var(--accent-color), transparent 70%);"></div>
+        <div class="blob blob-2" style="background: radial-gradient(circle, var(--primary-color), transparent 70%);"></div>
+    </div>
+
+    <!-- Header -->
+    <header id="header" class="scrolled">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-bolt" style="color: var(--accent-color);"></i> NexEvent Admin
+            </a>
+            <div class="nav-actions">
+                <button class="btn btn-outline" style="border-color: var(--accent-color); color: white;" onclick="logoutAdmin()">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Header -->
+    <section class="dashboard-header">
+        <div class="container">
+            <div class="admin-profile">
+                <div class="admin-avatar">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <div style="text-align: left;">
+                    <h1>Admin <span style="color: var(--accent-color);">Panel</span></h1>
+                    <p style="margin: 0;">Manage events and platform listings.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="section-padding" style="padding-top: 0;">
+        <div class="container">
+            
+            <div class="glass-panel" style="padding: 2.5rem; margin-bottom: 3rem;">
+                <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; margin-bottom: 2rem;">
+                    <h2><i class="fa-solid fa-circle-plus" style="color: var(--accent-color); margin-right: 0.5rem;"></i> Add New Event</h2>
+                    <p style="margin: 0;">Create a new BookMyShow style event listing.</p>
+                </div>
+
+                <div class="grid-2-col">
+                    <div class="form-group">
+                        <label>Event Name</label>
+                        <input type="text" id="Event_name" class="form-control" placeholder="E.g. CodeFest 2026">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <input type="text" id="Category" class="form-control" placeholder="E.g. Technology, Music, Comedy">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Location / Venue</label>
+                    <input type="text" id="Location" class="form-control" placeholder="E.g. Convention Center, New York">
+                </div>
+
+                <div class="grid-2-col">
+                    <div class="form-group">
+                        <label>Starting Time (24-hour)</label>
+                        <input type="datetime-local" id="Starting_Time" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ending Time (24-hour)</label>
+                        <input type="datetime-local" id="Ending_Time" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group" style="max-width: 300px;">
+                    <label>Base Ticket Price ($)</label>
+                    <input type="number" id="Price" class="form-control" placeholder="E.g. 50">
+                </div>
+
+                <button class="btn btn-primary" style="background: linear-gradient(135deg, var(--accent-color), var(--primary-color)); margin-top: 1rem; padding: 1rem 3rem;" onclick="saveEvent()">
+                    <i class="fa-solid fa-paper-plane"></i> Publish Event
+                </button>
+            </div>
+
+            <div class="glass-panel" style="padding: 2.5rem;">
+                <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
+                    <h2><i class="fa-solid fa-calendar-check" style="color: var(--accent-color); margin-right: 0.5rem;"></i> Scheduled Events</h2>
+                    <p style="margin: 0;">Manage your active platform events.</p>
+                </div>
+
+                <div id="adminEvents" class="events-grid">
+                    <!-- Event cards loaded by JS -->
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container" style="border-top: none; padding-top: 2rem;">
+            <p style="text-align:center; color: var(--text-secondary);">&copy; 2026 NexEvent Admin. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Check Admin Session
+        const currentSession = localStorage.getItem("nexevent_admin_session");
+        if (!currentSession) {
+            window.location.href = "admin_login.html";
+        }
+    </script>
+    <script src="js/admin-auth.js"></script>
+    <script src="js/admin-api-events.js"></script>
+</body>
+</html>

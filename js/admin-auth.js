@@ -1,4 +1,4 @@
-s// Register Admin
+// Register Admin
 function registerAdmin(){
 
 const adminId =

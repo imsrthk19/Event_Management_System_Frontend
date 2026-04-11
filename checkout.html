@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | NexEvent</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Styling -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .checkout-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+            margin-top: 8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: white;
+            font-family: inherit;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .summary-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--glass-border);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Success Modal */
+        #successModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 0 30px rgba(108, 92, 231, 0.4);
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        @media(max-width: 992px) {
+            .checkout-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-card {
+                position: static;
+                order: -1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header id="header" class="scrolled">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-bolt"></i> NexEvent
+            </a>
+            <div class="nav-links" style="font-weight:600; font-size: 1.1rem; color: var(--text-secondary);">
+                Secure Checkout <i class="fa-solid fa-lock"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <form id="checkoutForm" class="checkout-layout">
+            <!-- Left: Forms -->
+            <div class="glass-panel" style="padding: 2rem;">
+                <h2 style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; margin-bottom: 2rem;">
+                    Billing Information</h2>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex:1;">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" class="form-control" required>
+                </div>
+
+                <h2
+                    style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; margin-bottom: 2rem; margin-top: 3rem;">
+                    Payment Method</h2>
+
+                <div class="form-group">
+                    <label>Cardholder Name</label>
+                    <input type="text" class="form-control" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Card Number</label>
+                    <div class="search-input-group form-control"
+                        style="background:rgba(255,255,255,0.05); border: none; display:flex;">
+                        <i class="fa-brands fa-cc-visa"></i>
+                        <input type="text"
+                            style="outline:none; width:100%; color:white; background:transparent; border:none;"
+                            placeholder="0000 0000 0000 0000" maxlength="19" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex:1;">
+                        <label>Expiry (MM/YY)</label>
+                        <input type="text" class="form-control" placeholder="12/28" required>
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>CVC</label>
+                        <input type="text" class="form-control" placeholder="123" maxlength="3" required>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right: Order Summary -->
+            <div class="summary-card glass-panel" id="orderSummaryWrapper">
+                <!-- Rendered by JS -->
+            </div>
+        </form>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal">
+        <div class="modal-content">
+            <i class="fa-solid fa-circle-check success-icon"></i>
+            <h2>Payment Successful!</h2>
+            <p style="margin: 1rem 0;">Your order has been confirmed. A receipt and your tickets have been sent to your
+                email.</p>
+            <p><strong>Booking ID:</strong> <span id="bkgIdDisplay"></span></p>
+            <br>
+            <a href="home.html" class="btn btn-primary" style="width: 100%;">View My Tickets</a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = AuthHelper.protectRoute();
+            if (!user) return;
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = parseInt(urlParams.get('id'));
+            const tier = urlParams.get('tier') || 'General';
+            const qty = parseInt(urlParams.get('qty')) || 1;
+
+            const event = eventsData.find(e => e.id === id);
+
+            if (!event) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Calculate pricing
+            const basePrice = tier === 'VIP' ? event.price * 2.5 : event.price;
+            const subtotal = basePrice * qty;
+            const tax = subtotal > 0 ? subtotal * 0.08 : 0; // 8% tax
+            const serviceFee = subtotal > 0 ? 5.00 * qty : 0;
+            const total = subtotal + tax + serviceFee;
+
+            // Render Summary
+            document.getElementById('orderSummaryWrapper').innerHTML = `
+                <h3>Order Summary</h3>
+                <div style="display:flex; gap: 1rem; margin: 1.5rem 0; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <img src="${event.image}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                    <div>
+                        <h4 style="font-size: 1rem; margin:0;">${event.title}</h4>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">${tier} Admission x${qty}</span>
+                    </div>
+                </div>
+
+                <div class="summary-line">
+                    <span>Tickets (${qty} x $${basePrice.toFixed(2)})</span>
+                    <span>$${subtotal.toFixed(2)}</span>
+                </div>
+                <div class="summary-line">
+                    <span>Service Fee</span>
+                    <span>$${serviceFee.toFixed(2)}</span>
+                </div>
+                <div class="summary-line">
+                    <span>Tax (8%)</span>
+                    <span>$${tax.toFixed(2)}</span>
+                </div>
+
+                <div class="total-line">
+                    <span>Total</span>
+                    <span>$${total.toFixed(2)}</span>
+                </div>
+
+                <button type="submit" form="checkoutForm" class="btn btn-primary" style="width: 100%; margin-top: 2rem;">Confirm & Pay $${total.toFixed(2)}</button>
+            `;
+
+            // Form Submit Logic
+            document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                // Add booking to LocalStorage
+                const bkgDetails = {
+                    event: event,
+                    tier: tier,
+                    qty: qty,
+                    total: total
+                };
+
+                const bookings = JSON.parse(localStorage.getItem('nexevent_bookings') || '[]');
+                const bkgId = 'NEX-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                bookings.push({
+                    id: bkgId,
+                    dateBooked: new Date().toISOString(),
+                    ...bkgDetails
+                });
+                localStorage.setItem('nexevent_bookings', JSON.stringify(bookings));
+
+                // Show Success Modal
+                document.getElementById('bkgIdDisplay').innerText = bkgId;
+                document.getElementById('successModal').style.display = 'flex';
+            });
+        });
+    </script>
+</body>
+
+</html>
