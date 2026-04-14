@@ -41,7 +41,10 @@ const defaultEvents = [
 LOAD ADMIN EVENTS
 =============================== */
 
-const API_BASE_URL = 'https://event-management-project-sd.onrender.com/api/v1';
+if (!window.API_BASE_URL) {
+    window.API_BASE_URL = 'https://event-management-project-sd.onrender.com/api/v1';
+}
+const BACKEND_API_BASE_URL = window.API_BASE_URL;
 
 let storedEvents = JSON.parse(localStorage.getItem("nexevent_events")) || [];
 
@@ -82,7 +85,7 @@ const eventsData = [
 
 window.loadBackendEvents = async () => {
     try {
-        const response = await fetch(`${API_BASE_URL}/event/showevents`);
+        const response = await fetch(`${BACKEND_API_BASE_URL}/event/showevents`);
         if (!response.ok) {
             console.warn('Could not load backend events', response.status);
             return;
