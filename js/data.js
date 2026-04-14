@@ -41,7 +41,7 @@ const defaultEvents = [
 LOAD ADMIN EVENTS
 =============================== */
 
-const API_BASE_URL = 'http://localhost:8006/api/v1';
+const API_BASE_URL = 'https://event-management-project-sd.onrender.com/api/v1';
 
 let storedEvents = JSON.parse(localStorage.getItem("nexevent_events")) || [];
 
