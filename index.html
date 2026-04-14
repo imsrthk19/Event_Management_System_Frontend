@@ -1,234 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Registration | NexEvent</title>
+    <title>TicketArena | Premium Event Management</title>
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Styling -->
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .auth-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 5rem 1rem;
-        }
-        .auth-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            width: 100%;
-            max-width: 450px;
-            padding: 3rem;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-        }
-        .auth-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .auth-header h2 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-        .form-control {
-            width: 100%;
-            padding: 1rem;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            color: white;
-            font-family: inherit;
-            outline: none;
-            transition: var(--transition);
-        }
-        .form-control:focus {
-            border-color: var(--primary-color);
-            background: rgba(255,255,255,0.1);
-        }
-        .auth-toggle {
-            text-align: center;
-            margin-top: 1.5rem;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-        .auth-toggle a {
-            color: var(--secondary-color);
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .error-message {
-            color: var(--accent-color);
-            background: rgba(253, 121, 168, 0.1);
-            padding: 0.8rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            display: none;
-        }
-        #loginForm { display: block; }
-        #registerForm { display: none; }
-    </style>
 </head>
+
 <body>
-    <!-- Background -->
+    <!-- Animated Background Blobs -->
     <div class="bg-blobs">
         <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
         <div class="blob blob-3"></div>
     </div>
-
-    <!-- Header -->
-    <header id="header" class="scrolled">
+    <!-- Header / Navigation -->
+    <header id="header">
         <div class="container nav-container">
             <a href="index.html" class="logo">
-                <i class="fa-solid fa-bolt"></i> NexEvent
+                <i class="fa-solid fa-ticket"></i> TicketArena
             </a>
-            <nav class="nav-links" id="navLinks" style="display: none;">
-                <a href="home.html">Home</a>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html" class="active">Home</a>
                 <a href="events.html">Events</a>
             </nav>
+            <div class="nav-actions" style="display:flex; gap:1rem; align-items:center;">
+                <a id="authButton" href="login.html" class="btn btn-outline" style="padding: 0.5rem 1.5rem">Log In</a>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
         </div>
     </header>
 
-    <div class="auth-container">
-        <div class="auth-card">
-            <div id="errorMsg" class="error-message"></div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Discover the World's Best Events</h1>
+                <p>Book tickets to concerts, conferences, sports, and exclusive meetups globally. Seamless, fast, and
+                    completely secure.</p>
 
-            <!-- Login Form -->
-            <form id="loginForm">
-                <div class="auth-header">
-                    <h2>Welcome Back</h2>
-                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Sign in to manage your tickets.</p>
+                <div class="search-bar glass-panel">
+                    <div class="search-input-group">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="heroSearch" placeholder="Search events, artists, or venues...">
+                    </div>
+                    <div class="search-input-group">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <select id="heroLocation"
+                            style="background: transparent; border: none; color: white; font-family: inherit; font-size: 1rem; outline: none; width: 100%; cursor: pointer;">
+                            <option value="" style="color: black;">All Places</option>
+                            <option value="Bengaluru" style="color: black;">Bengaluru</option>
+                            <option value="Goa" style="color: black;">Goa</option>
+                            <option value="Mumbai" style="color: black;">Mumbai</option>
+                            <option value="Delhi" style="color: black;">Delhi</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="btnSearch">Search</button>
                 </div>
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="loginEmail" class="form-control" placeholder="you@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Log In</button>
-                <div class="auth-toggle">
-                    Don't have an account? <a onclick="toggleForms()">Sign Up</a>
-                </div>
-            </form>
 
-            <!-- Register Form -->
-            <form id="registerForm">
-                <div class="auth-header">
-                    <h2>Create Account</h2>
-                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Join the best events platform.</p>
+                <div class="categories-wrap">
+                    <div class="category-pill glass-panel"><i class="fa-solid fa-music"></i> Music</div>
+                    <div class="category-pill glass-panel"><i class="fa-solid fa-laptop-code"></i> Tech</div>
+                    <div class="category-pill glass-panel"><i class="fa-solid fa-basketball"></i> Sports</div>
+                    <div class="category-pill glass-panel"><i class="fa-solid fa-palette"></i> Arts</div>
                 </div>
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="regName" class="form-control" placeholder="John Doe" required>
-                </div>
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="regEmail" class="form-control" placeholder="you@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="regPassword" class="form-control" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Sign Up</button>
-                <div class="auth-toggle">
-                    Already have an account? <a onclick="toggleForms()">Log In</a>
-                </div>
-            </form>
-            
+            </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Featured Events Section -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <h2>Trending Events</h2>
+                    <p>Don't miss out on what everyone is talking about.</p>
+                </div>
+                <a href="events.html" class="btn btn-outline">View All <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="event-grid" id="featuredEventsList">
+                <!-- Events will be populated here via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Events Section -->
+    <section class="section-padding" style="background: rgba(255,255,255,0.02); margin-top: 2rem;">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <h2>Upcoming Next Week</h2>
+                    <p>Get your tickets before they sell out completely.</p>
+                </div>
+            </div>
+
+            <div class="event-grid" id="upcomingEventsList">
+                <!-- Events will be populated here via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="#" class="logo" style="margin-bottom: 1rem;"><i class="fa-solid fa-ticket"></i>
+                        TicketArena</a>
+                    <p style="font-size: 0.9rem;">Your premium destination for discovering and booking tickets to the
+                        most exclusive events worldwide.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Explore</h4>
+                    <div class="footer-links">
+                        <a href="index.html">Home</a>
+                        <a href="events.html">All Events</a>
+                        <a href="#">Categories</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <div class="footer-links">
+                        <a href="#">Help Center</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Contact Us</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Subscribe</h4>
+                    <p style="font-size: 0.9rem;">Get the latest updates on events.</p>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                        <input type="email" placeholder="Email Address"
+                            style="padding: 0.8rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; width: 100%;">
+                        <button class="btn btn-primary" style="padding: 0.8rem;"><i
+                                class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 TicketArena. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <!-- Scripts -->
+    <script src="js/data.js"></script>
     <script src="js/auth.js"></script>
-    <script>
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const errorMsg = document.getElementById('errorMsg');
-
-        // Toggle Views
-        const toggleForms = () => {
-            errorMsg.style.display = 'none';
-            if (loginForm.style.display === 'none') {
-                loginForm.style.display = 'block';
-                registerForm.style.display = 'none';
-            } else {
-                loginForm.style.display = 'none';
-                registerForm.style.display = 'block';
-            }
-        };
-
-        // Redirect URL parsing
-        const urlParams = new URLSearchParams(window.location.search);
-        const redirectUrl = urlParams.get('redirect') || 'home.html';
-
-        // Submit Handles
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const pass = document.getElementById('loginPassword').value;
-            
-            const res = await fetch("http://localhost:8006/login/" + email);
-            if(res.ok){
-                const user = await res.json();
-                localStorage.setItem('nexevent_loggedIn', JSON.stringify(user));
-                localStorage.setItem('nexevent_session', JSON.stringify(user)); // For auth.js compatibility
-                window.location.href = redirectUrl;
-            } else {
-                errorMsg.innerText = "User not found";
-                errorMsg.style.display = 'block';
-            }
-        });
-
-        registerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('regName').value;
-            const email = document.getElementById('regEmail').value;
-            const pass = document.getElementById('regPassword').value;
-            
-            const [firstName, ...lastNameParts] = name.split(' ');
-            const lastName = lastNameParts.join(' ');
-
-            const res = await fetch("http://localhost:8006/api/register", {
-                method: "POST",
-                headers: {"Content-Type": "application/x-www-form-urlencoded"},
-                body: new URLSearchParams({
-                    name: firstName,
-                    last_name: lastName || '',
-                    email: email,
-                    hashedPassword: pass
-                })
-            });
-
-            if(res.ok){
-                toggleForms();
-                errorMsg.innerText = "Registered Successfully! Please log in.";
-                errorMsg.style.background = "rgba(46, 213, 115, 0.1)";
-                errorMsg.style.color = "#2ed573";
-                errorMsg.style.display = 'block';
-            } else {
-                errorMsg.innerText = "Error during registration";
-                errorMsg.style.background = "rgba(253, 121, 168, 0.1)";
-                errorMsg.style.color = "var(--accent-color)";
-                errorMsg.style.display = 'block';
-            }
-        });
-    </script>
+    <script src="js/main.js"></script>
 </body>
+
 </html>

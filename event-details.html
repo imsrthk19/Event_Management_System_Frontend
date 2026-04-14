@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Details | NexEvent</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Event Details | TicketArena</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
@@ -14,19 +16,23 @@
             object-fit: cover;
             object-position: center;
         }
+
         .details-container {
             margin-top: -100px;
             position: relative;
             z-index: 10;
         }
+
         .main-card {
             padding: 3rem;
         }
+
         .layout-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 3rem;
         }
+
         .ticket-tier {
             padding: 1.5rem;
             border: 1px solid var(--glass-border);
@@ -35,35 +41,40 @@
             cursor: pointer;
             transition: var(--transition);
         }
-        .ticket-tier:hover, .ticket-tier.selected {
+
+        .ticket-tier:hover,
+        .ticket-tier.selected {
             border-color: var(--primary-color);
             background: rgba(108, 92, 231, 0.1);
         }
+
         .price-tag {
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--secondary-color);
         }
-        @media(max-width: 992px){
+
+        @media(max-width: 992px) {
             .layout-grid {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- Header -->
     <header id="header" class="scrolled">
         <div class="container nav-container">
             <a href="index.html" class="logo">
-                <i class="fa-solid fa-bolt"></i> NexEvent
+                <i class="fa-solid fa-ticket"></i> TicketArena
             </a>
             <nav class="nav-links" id="navLinks">
-                <a href="home.html">Home</a>
+                <a href="index.html">Home</a>
                 <a href="events.html" class="active">Events</a>
             </nav>
             <div class="nav-actions" style="display:flex; gap:1rem; align-items:center;">
-                <a class="btn btn-outline" style="padding: 0.5rem 1.5rem">Log In</a>
+                <a id="authButton" href="login.html" class="btn btn-outline" style="padding: 0.5rem 1.5rem">Log In</a>
                 <button class="mobile-menu-btn" id="mobileMenuBtn">
                     <i class="fa-solid fa-bars"></i>
                 </button>
@@ -78,32 +89,33 @@
     <!-- Footer -->
     <footer>
         <div class="container" style="border-top: none; padding-top: 2rem;">
-            <p style="text-align:center; color: var(--text-secondary);">&copy; 2026 NexEvent by Sarthak. All rights reserved.</p>
+            <p style="text-align:center; color: var(--text-secondary);">&copy; 2026 TicketArena by Sarthak. All rights
+                reserved.</p>
         </div>
     </footer>
 
     <script src="js/data.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
 
-<script>
+    <script>
 
-document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            await window.loadBackendEvents?.();
 
-const urlParams =
-new URLSearchParams(window.location.search);
+            const urlParams =
+                new URLSearchParams(window.location.search);
 
-const id =
-parseInt(urlParams.get('id'));
+            const id = urlParams.get('id');
 
-const event =
-eventsData.find(
-e => e.id === id
-) || eventsData[0];
+            const event =
+                eventsData.find(
+                    e => String(e.id) === String(id)
+                ) || eventsData[0];
 
-document.getElementById(
-'eventDetailsView'
-).innerHTML = `
+            document.getElementById(
+                'eventDetailsView'
+            ).innerHTML = `
 
 <img src="${event.image}"
 alt="Event Banner"
@@ -147,11 +159,10 @@ style="font-size:1.5rem;"></i>
 <p style="margin:0">
 
 ${formatEventDateTime(
-event.Starting_Time
-)}
+                event.Starting_Time || event.time
+            )}
 
 </p>
-
 </div>
 
 </div>
@@ -225,7 +236,7 @@ align-items:center;
 
 <div class="price-tag">
 
-$${event.price.toFixed(2)}
+₹${event.price.toFixed(2)}
 
 </div>
 
@@ -287,63 +298,64 @@ Checkout Now
 
 `;
 
-});
+        });
 
 
 
-/* ===============================
-CALENDAR FORMAT FUNCTION
-=============================== */
+        /* ===============================
+        CALENDAR FORMAT FUNCTION
+        =============================== */
 
-function formatEventDateTime(dateString){
+        function formatEventDateTime(dateString) {
 
-const date =
-new Date(dateString);
+            const date =
+                new Date(dateString);
 
-return date.toLocaleString(
-'en-US',
-{
+            return date.toLocaleString(
+                'en-US',
+                {
 
-weekday:'long',
-month:'long',
-day:'numeric',
-year:'numeric',
+                    weekday: 'long',
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric',
 
-hour:'2-digit',
-minute:'2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
 
-hour12:false
+                    hour12: false
 
-}
+                }
 
-);
+            );
 
-}
+        }
 
 
 
-/* ===============================
-CHECKOUT
-=============================== */
+        /* ===============================
+        CHECKOUT
+        =============================== */
 
-const proceedToCheckout =
-(eventId) => {
+        const proceedToCheckout =
+            (eventId) => {
 
-const tier =
-document.getElementById(
-'selectedTier'
-).value;
+                const tier =
+                    document.getElementById(
+                        'selectedTier'
+                    ).value;
 
-const qty =
-document.getElementById(
-'ticketQty'
-).value;
+                const qty =
+                    document.getElementById(
+                        'ticketQty'
+                    ).value;
 
-window.location.href =
-`checkout.html?id=${eventId}&tier=${tier}&qty=${qty}`;
+                window.location.href =
+                    `checkout.html?id=${eventId}&tier=${tier}&qty=${qty}`;
 
-};
+            };
 
-</script>
+    </script>
 </body>
+
 </html>

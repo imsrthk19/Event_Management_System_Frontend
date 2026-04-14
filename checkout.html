@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout | NexEvent</title>
+    <title>Checkout | TicketArena</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
@@ -102,6 +102,58 @@
             margin-bottom: 1.5rem;
         }
 
+        .payment-methods {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .payment-option {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .payment-option label {
+            display: block;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .payment-option input[type="radio"] {
+            display: none;
+        }
+
+        .payment-option input[type="radio"]:checked+label {
+            border-color: var(--primary-color);
+            background: rgba(108, 92, 231, 0.1);
+            color: white;
+            font-weight: 600;
+        }
+
+        .payment-details {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         @media(max-width: 992px) {
             .checkout-layout {
                 grid-template-columns: 1fr;
@@ -120,7 +172,7 @@
     <header id="header" class="scrolled">
         <div class="container nav-container">
             <a href="index.html" class="logo">
-                <i class="fa-solid fa-bolt"></i> NexEvent
+                <i class="fa-solid fa-ticket"></i> TicketArena
             </a>
             <div class="nav-links" style="font-weight:600; font-size: 1.1rem; color: var(--text-secondary);">
                 Secure Checkout <i class="fa-solid fa-lock"></i>
@@ -154,28 +206,74 @@
                     style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; margin-bottom: 2rem; margin-top: 3rem;">
                     Payment Method</h2>
 
-                <div class="form-group">
-                    <label>Cardholder Name</label>
-                    <input type="text" class="form-control" required placeholder="John Doe">
-                </div>
-                <div class="form-group">
-                    <label>Card Number</label>
-                    <div class="search-input-group form-control"
-                        style="background:rgba(255,255,255,0.05); border: none; display:flex;">
-                        <i class="fa-brands fa-cc-visa"></i>
-                        <input type="text"
-                            style="outline:none; width:100%; color:white; background:transparent; border:none;"
-                            placeholder="0000 0000 0000 0000" maxlength="19" required>
+                <div class="payment-methods">
+                    <div class="payment-option">
+                        <input type="radio" id="pay-upi" name="paymentType" value="upi" checked
+                            onchange="togglePayment('upi')">
+                        <label for="pay-upi"><i class="fa-solid fa-mobile-screen" style="margin-right: 8px;"></i>
+                            UPI</label>
+                    </div>
+                    <div class="payment-option">
+                        <input type="radio" id="pay-qr" name="paymentType" value="qr" onchange="togglePayment('qr')">
+                        <label for="pay-qr"><i class="fa-solid fa-qrcode" style="margin-right: 8px;"></i> QR
+                            Code</label>
+                    </div>
+                    <div class="payment-option">
+                        <input type="radio" id="pay-card" name="paymentType" value="card"
+                            onchange="togglePayment('card')">
+                        <label for="pay-card"><i class="fa-solid fa-credit-card" style="margin-right: 8px;"></i>
+                            Card</label>
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group" style="flex:1;">
-                        <label>Expiry (MM/YY)</label>
-                        <input type="text" class="form-control" placeholder="12/28" required>
+
+                <!-- UPI Details -->
+                <div id="payment-upi" class="payment-details" style="display: block;">
+                    <div class="form-group">
+                        <label>UPI ID / VPA</label>
+                        <input type="text" class="form-control" id="upiInput" placeholder="username@upi" required>
                     </div>
-                    <div class="form-group" style="flex:1;">
-                        <label>CVC</label>
-                        <input type="text" class="form-control" placeholder="123" maxlength="3" required>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                        You will receive a payment request on your UPI app. Please approve it.
+                    </p>
+                </div>
+
+                <!-- QR Details -->
+                <div id="payment-qr" class="payment-details" style="display: none; text-align: center;">
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">Scan using any UPI App</p>
+                    <img id="dynamicQRCode"
+                        src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=ticketarena@upi&pn=TicketArena"
+                        alt="UPI QR Code"
+                        style="border-radius: 8px; background: white; padding: 10px; width: 150px; height: 150px;">
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem;">
+                        Supported apps: GPay, PhonePe, Paytm, BHIM
+                    </div>
+                </div>
+
+                <!-- Card Details -->
+                <div id="payment-card" class="payment-details" style="display: none;">
+                    <div class="form-group">
+                        <label>Cardholder Name</label>
+                        <input type="text" class="form-control" id="cardNameInput" placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Card Number</label>
+                        <div class="search-input-group form-control"
+                            style="background:rgba(255,255,255,0.05); border: none; display:flex;">
+                            <i class="fa-brands fa-cc-visa"></i>
+                            <input type="text" id="cardNumberInput"
+                                style="outline:none; width:100%; color:white; background:transparent; border:none;"
+                                placeholder="0000 0000 0000 0000" maxlength="19">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;">
+                            <label>Expiry (MM/YY)</label>
+                            <input type="text" id="cardExpInput" class="form-control" placeholder="12/28">
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>CVC</label>
+                            <input type="text" id="cardCvcInput" class="form-control" placeholder="123" maxlength="3">
+                        </div>
                     </div>
                 </div>
 
@@ -227,6 +325,11 @@
             const serviceFee = subtotal > 0 ? 5.00 * qty : 0;
             const total = subtotal + tax + serviceFee;
 
+            // Update QR Code with dynamic total
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=ticketarena@upi&pn=TicketArena&am=${total.toFixed(2)}`;
+            const qrImg = document.getElementById('dynamicQRCode');
+            if (qrImg) qrImg.src = qrUrl;
+
             // Render Summary
             document.getElementById('orderSummaryWrapper').innerHTML = `
                 <h3>Order Summary</h3>
@@ -239,24 +342,24 @@
                 </div>
 
                 <div class="summary-line">
-                    <span>Tickets (${qty} x $${basePrice.toFixed(2)})</span>
-                    <span>$${subtotal.toFixed(2)}</span>
+                    <span>Tickets (${qty} x ₹${basePrice.toFixed(2)})</span>
+                    <span>₹${subtotal.toFixed(2)}</span>
                 </div>
                 <div class="summary-line">
                     <span>Service Fee</span>
-                    <span>$${serviceFee.toFixed(2)}</span>
+                    <span>₹${serviceFee.toFixed(2)}</span>
                 </div>
                 <div class="summary-line">
                     <span>Tax (8%)</span>
-                    <span>$${tax.toFixed(2)}</span>
+                    <span>₹${tax.toFixed(2)}</span>
                 </div>
 
                 <div class="total-line">
                     <span>Total</span>
-                    <span>$${total.toFixed(2)}</span>
+                    <span>₹${total.toFixed(2)}</span>
                 </div>
 
-                <button type="submit" form="checkoutForm" class="btn btn-primary" style="width: 100%; margin-top: 2rem;">Confirm & Pay $${total.toFixed(2)}</button>
+                <button type="submit" form="checkoutForm" class="btn btn-primary" style="width: 100%; margin-top: 2rem;">Confirm & Pay ₹${total.toFixed(2)}</button>
             `;
 
             // Form Submit Logic
@@ -285,6 +388,32 @@
                 document.getElementById('successModal').style.display = 'flex';
             });
         });
+
+        // Payment Method Toggle Logic
+        function togglePayment(type) {
+            document.getElementById('payment-upi').style.display = 'none';
+            document.getElementById('payment-qr').style.display = 'none';
+            document.getElementById('payment-card').style.display = 'none';
+
+            document.getElementById('upiInput').required = false;
+            document.getElementById('cardNameInput').required = false;
+            document.getElementById('cardNumberInput').required = false;
+            document.getElementById('cardExpInput').required = false;
+            document.getElementById('cardCvcInput').required = false;
+
+            if (type === 'upi') {
+                document.getElementById('payment-upi').style.display = 'block';
+                document.getElementById('upiInput').required = true;
+            } else if (type === 'qr') {
+                document.getElementById('payment-qr').style.display = 'block';
+            } else if (type === 'card') {
+                document.getElementById('payment-card').style.display = 'block';
+                document.getElementById('cardNameInput').required = true;
+                document.getElementById('cardNumberInput').required = true;
+                document.getElementById('cardExpInput').required = true;
+                document.getElementById('cardCvcInput').required = true;
+            }
+        }
     </script>
 </body>
 

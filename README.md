@@ -1,16 +1,52 @@
-# React + Vite
+# Event Management System - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository contains the pure frontend code (HTML, CSS, JavaScript) for the Event Management System (TicketArena).
 
-Currently, two official plugins are available:
+## Overview
+This is a purely vanilla HTML/CSS/JS frontend interface designed for event discovery, user authentication (mocked via local storage), and ticket booking. Backend integrations have been removed so you can focus strictly on the UI/UX aspects of the frontend assignment.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## How to run
+1. Clone the repository.
+2. Open `index.html` in your web browser.
+3. No build tools or backend dependencies are required.
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## complete routes for froentend
+POST /api/v1/user/register — user registration
+POST /api/v1/user/login — user login
+GET /api/v1/event/showevents — list events
+## pending routes for froentend
+POST /api/v1/event/create — create a new event
+PATCH /api/v1/user/update/:id — update user
+DELETE /api/v1/user/delete/:id — delete user
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+-------------------------------------------------------
+
+
+curl -X POST http://localhost:8006/api/v1/event/create \
+  -H "Content-Type: application/json" \
+  -d '{
+    "Event_name":"Sunburn Music Night",
+    "Category":"Music",
+    "Location":"Goa",
+    "Event_Date":"2026-12-28",
+    "Starting_Time":"18:00",
+    "Ending_Time":"22:00",
+    "Price":2500
+  }'
+
+-------------------------------------------------
+
+curl -X DELETE http://localhost:8006/api/v1/user/delete/645b1234c9f12a34b5678901
+
+--------------------------------------
+curl -X PATCH http://localhost:8006/api/v1/user/update/645b1234c9f12a34b5678901 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name":"Aman",
+    "last_name":"Kumar",
+    "password":"newStrongPassword"
+  }'
+
+

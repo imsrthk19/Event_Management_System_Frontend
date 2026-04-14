@@ -59,7 +59,7 @@ const createEventCard = (event) => {
                     </div>
                 </div>
                 <div class="event-footer">
-                    <span class="event-price">${event.price > 0 ? '$' + event.price.toFixed(2) : 'Free'}</span>
+                    <span class="event-price">${event.price > 0 ? '₹' + event.price.toFixed(2) : 'Free'}</span>
                     <button class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Tickets</button>
                 </div>
             </div>
@@ -71,15 +71,43 @@ const createEventCard = (event) => {
 const initHomePage = () => {
     const featuredContainer = document.getElementById('featuredEventsList');
     const upcomingContainer = document.getElementById('upcomingEventsList');
+    const heroLocation = document.getElementById('heroLocation');
 
-    if (featuredContainer && typeof eventsData !== 'undefined') {
-        const featuredEvents = eventsData.filter(e => e.featured).slice(0, 3);
-        featuredContainer.innerHTML = featuredEvents.map(createEventCard).join('');
-    }
+    const renderHomeEvents = (locationFilter = '') => {
+        if (featuredContainer && typeof eventsData !== 'undefined') {
+            let featuredEvents = eventsData.filter(e => e.featured);
+            if (locationFilter) {
+                featuredEvents = featuredEvents.filter(e => e.location.toLowerCase().includes(locationFilter.toLowerCase()));
+            }
+            const fSliced = featuredEvents.slice(0, 3);
+            if (fSliced.length > 0) {
+                featuredContainer.innerHTML = fSliced.map(createEventCard).join('');
+            } else {
+                featuredContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 2rem 0;">No trending events in this location.</p>';
+            }
+        }
 
-    if (upcomingContainer && typeof eventsData !== 'undefined') {
-        const upcomingEvents = eventsData.filter(e => e.upcoming).slice(0, 3);
-        upcomingContainer.innerHTML = upcomingEvents.map(createEventCard).join('');
+        if (upcomingContainer && typeof eventsData !== 'undefined') {
+            let upcomingEvents = eventsData.filter(e => e.upcoming);
+            if (locationFilter) {
+                upcomingEvents = upcomingEvents.filter(e => e.location.toLowerCase().includes(locationFilter.toLowerCase()));
+            }
+            const uSliced = upcomingEvents.slice(0, 3);
+            if (uSliced.length > 0) {
+                upcomingContainer.innerHTML = uSliced.map(createEventCard).join('');
+            } else {
+                upcomingContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 2rem 0;">No upcoming events in this location.</p>';
+            }
+        }
+    };
+
+    // Initial render
+    renderHomeEvents();
+
+    if (heroLocation) {
+        heroLocation.addEventListener('change', (e) => {
+            renderHomeEvents(e.target.value);
+        });
     }
 };
 
@@ -89,13 +117,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Check path for specific initializations
     const path = window.location.pathname;
-    
+
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
-            if(target) {
+            if (target) {
                 target.scrollIntoView({
                     behavior: 'smooth'
                 });

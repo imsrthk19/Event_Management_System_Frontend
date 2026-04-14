@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Events | NexEvent</title>
+    <title>All Events | TicketArena</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
@@ -58,6 +58,10 @@
             height: 18px;
             accent-color: var(--primary-color);
         }
+        select option {
+            color: black;
+            background: white;
+}
 
         @media (max-width: 992px) {
             .events-layout {
@@ -76,14 +80,14 @@
     <header id="header">
         <div class="container nav-container">
             <a href="index.html" class="logo">
-                <i class="fa-solid fa-bolt"></i> NexEvent
+                <i class="fa-solid fa-ticket"></i> TicketArena
             </a>
             <nav class="nav-links" id="navLinks">
-                <a href="home.html">Home</a>
+                <a href="index.html">Home</a>
                 <a href="events.html" class="active">Events</a>
             </nav>
             <div class="nav-actions" style="display:flex; gap:1rem; align-items:center;">
-                <a href="index.html" class="btn btn-outline" style="padding: 0.5rem 1.5rem">Log In</a>
+                <a id="authButton" href="login.html" class="btn btn-outline" style="padding: 0.5rem 1.5rem">Log In</a>
                 <button class="mobile-menu-btn" id="mobileMenuBtn">
                     <i class="fa-solid fa-bars"></i>
                 </button>
@@ -131,15 +135,41 @@
                         <h4>Price Range</h4>
                         <label class="filter-option"><input type="checkbox" value="free" class="price-filter">
                             Free</label>
-                        <label class="filter-option"><input type="checkbox" value="under50" class="price-filter"> Under
-                            $50</label>
-                        <label class="filter-option"><input type="checkbox" value="50to150" class="price-filter"> $50 -
-                            $150</label>
-                        <label class="filter-option"><input type="checkbox" value="over150" class="price-filter"> Over
-                            $150</label>
+                        <label class="filter-option"><input type="checkbox" value="under1000" class="price-filter">
+                            Under
+                            ₹1000</label>
+                        <label class="filter-option"><input type="checkbox" value="1000to2500" class="price-filter">
+                            ₹1000
+                            -
+                            ₹2500</label>
+                        <label class="filter-option"><input type="checkbox" value="over2500" class="price-filter"> Over
+                            ₹2500</label>
+                            <button class="btn btn-outline" style="width: 100%; margin-top: 1rem;" id="btnResetFilters">Reset Filters</button>
                     </div>
 
-                    <button class="btn btn-outline" style="width: 100%;" id="btnResetFilters">Reset Filters</button>
+                    <div class="filter-group">
+                        <h4>Create Event</h4>
+                        <form id="createEventForm">
+                            <div style="display: grid; gap: 0.8rem;">
+                                <input type="text" id="newEventTitle" placeholder="Event Title" required style="padding: 0.8rem; border: 1px solid var(--glass-border); border-radius: 8px; background: rgba(255,255,255,0.05); color: white;">
+                                <input type="text" id="newEventLocation" placeholder="Location" required style="padding: 0.8rem; border: 1px solid var(--glass-border); border-radius: 8px; background: rgba(255,255,255,0.05); color: white;">
+                                <select id="newEventCategory" required style="padding: 0.8rem; border: 1px solid var(--glass-border); border-radius: 8px; background: rgba(255,255,255,0.05); color: white;">
+                                    <option value="">Select Category</option>
+                                    <option value="Music">Music</option>
+                                    <option value="Tech">Tech</option>
+                                    <option value="Sports">Sports</option>
+                                    <option value="Arts">Arts</option>
+                                </select>
+                                <input type="date" id="newEventDate" required style="padding: 0.8rem; border: 1px solid var(--glass-border); border-radius: 8px; background: rgba(255,255,255,0.05); color: white;">
+                                <input type="time" id="newEventStart" required style="padding: 0.8rem; border: 1px solid var(--glass-border); border-radius: 8px; background: rgba(255,255,255,0.05); color: white;">
+                                <input type="time" id="newEventEnd" required style="padding: 0.8rem; border: 1px solid var(--glass-border); border-radius: 8px; background: rgba(255,255,255,0.05); color: white;">
+                                <input type="number" id="newEventPrice" min="0" placeholder="Price" required style="padding: 0.8rem; border: 1px solid var(--glass-border); border-radius: 8px; background: rgba(255,255,255,0.05); color: white;">
+                                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Event</button>
+                            </div>
+                            <p id="createEventMessage" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-secondary);"></p>
+                        </form>
+                    </div>
+
                 </aside>
 
                 <!-- Events Grid -->
@@ -166,7 +196,7 @@
     <footer>
         <div class="container">
             <div class="footer-bottom" style="border-top: none; padding-top: 0;">
-                <p>&copy; 2026 NexEvent by Sarthak. All rights reserved.</p>
+                <p>&copy; 2026 TicketArena. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -177,11 +207,13 @@
     <script src="js/main.js"></script>
     <script>
         // Events Page Logic
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            await window.loadBackendEvents?.();
             const container = document.getElementById('allEventsList');
             const resultsCount = document.getElementById('resultsCount');
             const searchInput = document.getElementById('eventSearchPage');
             const catFilters = document.querySelectorAll('.cat-filter');
+            const priceFilters = document.querySelectorAll('.price-filter');
 
             const renderEvents = (events) => {
                 if (events.length === 0) {
@@ -195,11 +227,23 @@
             const filterEvents = () => {
                 const query = searchInput.value.toLowerCase();
                 const selectedCats = Array.from(catFilters).filter(cb => cb.checked).map(cb => cb.value);
+                const selectedPrices = Array.from(priceFilters).filter(cb => cb.checked).map(cb => cb.value);
 
                 let filtered = eventsData.filter(event => {
                     const matchQuery = event.title.toLowerCase().includes(query) || event.location.toLowerCase().includes(query);
                     const matchCat = selectedCats.length === 0 || selectedCats.includes(event.category);
-                    return matchQuery && matchCat;
+
+                    let matchPrice = selectedPrices.length === 0;
+                    if (!matchPrice) {
+                        for (let p of selectedPrices) {
+                            if (p === 'free' && event.price === 0) { matchPrice = true; break; }
+                            if (p === 'under1000' && event.price > 0 && event.price < 1000) { matchPrice = true; break; }
+                            if (p === '1000to2500' && event.price >= 1000 && event.price <= 2500) { matchPrice = true; break; }
+                            if (p === 'over2500' && event.price > 2500) { matchPrice = true; break; }
+                        }
+                    }
+
+                    return matchQuery && matchCat && matchPrice;
                 });
 
                 renderEvents(filtered);
@@ -207,6 +251,7 @@
 
             searchInput.addEventListener('input', filterEvents);
             catFilters.forEach(cb => cb.addEventListener('change', filterEvents));
+            priceFilters.forEach(cb => cb.addEventListener('change', filterEvents));
 
             document.getElementById('btnResetFilters').addEventListener('click', () => {
                 searchInput.value = '';
@@ -214,6 +259,57 @@
                 document.querySelectorAll('.price-filter').forEach(cb => cb.checked = false);
                 renderEvents(eventsData);
             });
+
+            const createEventForm = document.getElementById('createEventForm');
+            const createEventMessage = document.getElementById('createEventMessage');
+            if (createEventForm) {
+                createEventForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const title = document.getElementById('newEventTitle').value.trim();
+                    const location = document.getElementById('newEventLocation').value.trim();
+                    const category = document.getElementById('newEventCategory').value;
+                    const date = document.getElementById('newEventDate').value;
+                    const start = document.getElementById('newEventStart').value;
+                    const end = document.getElementById('newEventEnd').value;
+                    const price = document.getElementById('newEventPrice').value;
+
+                    createEventMessage.textContent = 'Creating event...';
+
+                    try {
+                        const response = await fetch(`${API_BASE_URL}/event/create`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                Event_name: title,
+                                Category: category,
+                                Location: location,
+                                Event_Date: date,
+                                Starting_Time: start,
+                                Ending_Time: end,
+                                Price: Number(price)
+                            })
+                        });
+
+                        if (!response.ok) {
+                            const message = await response.text();
+                            throw new Error(message || 'Could not create event');
+                        }
+
+                        await window.loadBackendEvents?.();
+                        renderEvents(eventsData);
+
+                        createEventMessage.style.color = '#2ecc71';
+                        createEventMessage.textContent = 'Event created successfully.';
+                        createEventForm.reset();
+                    } catch (error) {
+                        console.error('Create event failed:', error);
+                        createEventMessage.style.color = '#e74c3c';
+                        createEventMessage.textContent = error.message || 'Unable to create event.';
+                    }
+                });
+            }
 
             // Initial render
             if (container) {
