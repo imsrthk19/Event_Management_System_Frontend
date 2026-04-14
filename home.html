@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard | TicketArena</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Styling -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .dashboard-header {
+            padding: 8rem 0 4rem;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(108, 92, 231, 0.2), var(--bg-color));
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            border: 4px solid var(--glass-border);
+        }
+
+        .ticket-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .ticket-card {
+            display: flex;
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .ticket-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .ticket-img {
+            width: 250px;
+            object-fit: cover;
+        }
+
+        .ticket-details {
+            padding: 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .ticket-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .bkg-id {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            color: var(--secondary-color);
+        }
+
+        .qr-code {
+            width: 60px;
+            height: 60px;
+            background: white;
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        @media(max-width: 768px) {
+            .ticket-card {
+                flex-direction: column;
+            }
+
+            .ticket-img {
+                width: 100%;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header id="header" class="scrolled">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-ticket"></i> TicketArena
+            </a>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html">Home</a>
+                <a href="events.html">Events</a>
+            </nav>
+            <div class="nav-actions" style="display:flex; gap:1rem; align-items:center;">
+                <a id="authButton" href="login.html" class="btn btn-outline" style="padding: 0.5rem 1.5rem">Log In</a>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Header -->
+    <section class="dashboard-header">
+        <div class="container">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div style="text-align: left;">
+                    <h1>Welcome Back, <span id="userNameDisplay" style="color: var(--secondary-color);">User</span></h1>
+                    <p style="margin: 0;">Manage your tickets and upcoming events.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="section-padding" style="padding-top: 0; min-height: 50vh;">
+        <div class="container">
+            <div class="glass-panel" style="padding: 2rem;">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
+                    <h2>My Bookings</h2>
+                    <a href="events.html" class="btn btn-primary" style="padding: 0.5rem 1.5rem;">Browse More</a>
+                </div>
+
+                <div class="ticket-list" id="bookingsList">
+                    <!-- Bookings Rendered by JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Account Settings -->
+    <section class="section-padding" style="padding-top: 0; min-height: auto;">
+        <div class="container">
+            <div class="glass-panel" style="padding: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; margin-bottom: 2rem;">
+                    <h2>Account Settings</h2>
+                </div>
+                
+                <form id="profileUpdateForm" style="max-width: 600px;">
+                    <div id="profileAlert" style="display: none; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;"></div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label for="updateFirstName" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">First Name</label>
+                            <input type="text" id="updateFirstName" style="width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 5px; color: white; outline: none; transition: border-color 0.3s ease;" required>
+                        </div>
+                        <div>
+                            <label for="updateLastName" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Last Name</label>
+                            <input type="text" id="updateLastName" style="width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 5px; color: white; outline: none; transition: border-color 0.3s ease;" required>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label for="updatePassword" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">New Password (leave blank to keep current)</label>
+                        <input type="password" id="updatePassword" style="width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 5px; color: white; outline: none; transition: border-color 0.3s ease;">
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">Update Profile</button>
+                        <button type="button" id="deleteAccountBtn" class="btn btn-outline" style="border-color: #ff4757; color: #ff4757;">Delete Account</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container" style="border-top: none; padding-top: 2rem;">
+            <p style="text-align:center; color: var(--text-secondary);">&copy; 2026 TicketArena by Sarthak. All rights
+                reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userStr = localStorage.getItem('nexevent_loggedIn');
+            let user = { name: "User" };
+            if (userStr) {
+                user = JSON.parse(userStr);
+            } else if (typeof AuthHelper !== 'undefined') {
+                const protectedUser = AuthHelper.protectRoute();
+                if (protectedUser) user = protectedUser;
+            }
+
+            document.getElementById('userNameDisplay').innerText = user.name;
+            
+            // Populate Account Settings Form
+            const updateFirstName = document.getElementById('updateFirstName');
+            const updateLastName = document.getElementById('updateLastName');
+            
+            if (user.firstName) {
+                updateFirstName.value = user.firstName;
+            } else {
+                const parts = (user.name || '').split(' ');
+                updateFirstName.value = parts[0] || '';
+            }
+            
+            if (user.lastName) {
+                updateLastName.value = user.lastName;
+            } else {
+                const parts = (user.name || '').split(' ');
+                updateLastName.value = parts.slice(1).join(' ') || '';
+            }
+
+            // Update Profile Event
+            document.getElementById('profileUpdateForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const firstName = updateFirstName.value;
+                const lastName = updateLastName.value;
+                const password = document.getElementById('updatePassword').value;
+                const alertBox = document.getElementById('profileAlert');
+
+                try {
+                    const payload = {
+                        first_name: firstName,
+                        last_name: lastName
+                    };
+                    if (password) {
+                        payload.password = password;
+                    }
+                    const userId = user.id || user._id;
+                    const authHeaders = {
+                        'Content-Type': 'application/json'
+                    };
+                    if (user.token) {
+                        authHeaders.Authorization = `Bearer ${user.token}`;
+                    }
+                    const response = await fetch(`${API_BASE_URL}/user/update/${userId}`, {
+                        method: 'PATCH',
+                        headers: authHeaders,
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) {
+                        throw new Error(await response.text());
+                    }
+
+                    // Update current session locally
+                    user.firstName = firstName;
+                    user.lastName = lastName;
+                    user.name = `${firstName} ${lastName}`.trim();
+                    if (password) user.password = password;
+
+                    localStorage.setItem('nexevent_session', JSON.stringify(user));
+                    localStorage.setItem('nexevent_loggedIn', JSON.stringify(user));
+
+                    document.getElementById('userNameDisplay').innerText = user.name;
+                    document.getElementById('updatePassword').value = '';
+
+                    alertBox.style.display = 'block';
+                    alertBox.style.backgroundColor = 'rgba(46, 204, 113, 0.2)';
+                    alertBox.style.color = '#2ecc71';
+                    alertBox.style.border = '1px solid #2ecc71';
+                    alertBox.innerText = 'Profile updated successfully!';
+                } catch (error) {
+                    console.error("Error updating profile", error);
+                    if (!user.id && !user._id) {
+                        let users = JSON.parse(localStorage.getItem('nexevent_users') || '[]');
+                        let userIndex = users.findIndex(u => u.email === user.email);
+                        if (userIndex !== -1) {
+                            users[userIndex].firstName = firstName;
+                            users[userIndex].lastName = lastName;
+                            users[userIndex].name = `${firstName} ${lastName}`.trim();
+                            if (password) users[userIndex].password = password;
+                            localStorage.setItem('nexevent_users', JSON.stringify(users));
+                        }
+                        user.firstName = firstName;
+                        user.lastName = lastName;
+                        user.name = `${firstName} ${lastName}`.trim();
+                        if (password) user.password = password;
+                        localStorage.setItem('nexevent_session', JSON.stringify(user));
+                        localStorage.setItem('nexevent_loggedIn', JSON.stringify(user));
+                        document.getElementById('userNameDisplay').innerText = user.name;
+                        document.getElementById('updatePassword').value = '';
+                        alertBox.style.display = 'block';
+                        alertBox.style.backgroundColor = 'rgba(46, 204, 113, 0.2)';
+                        alertBox.style.color = '#2ecc71';
+                        alertBox.style.border = '1px solid #2ecc71';
+                        alertBox.innerText = 'Profile updated locally.';
+                        return;
+                    }
+                    alertBox.style.display = 'block';
+                    alertBox.style.backgroundColor = 'rgba(231, 76, 60, 0.2)';
+                    alertBox.style.color = '#e74c3c';
+                    alertBox.style.border = '1px solid #e74c3c';
+                    alertBox.innerText = 'Error updating profile. ' + (error.message || 'Please try again.');
+                }
+            });
+
+            // Delete Profile Event
+            document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
+                if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                    try {
+                        const userId = user.id || user._id;
+                        const authHeaders = {
+                            'Content-Type': 'application/json'
+                        };
+                        if (user.token) {
+                            authHeaders.Authorization = `Bearer ${user.token}`;
+                        }
+                        const response = await fetch(`${API_BASE_URL}/user/delete/${userId}`, {
+                            method: 'DELETE',
+                            headers: authHeaders
+                        });
+                        if (!response.ok) {
+                            throw new Error(await response.text());
+                        }
+                        if (typeof AuthHelper !== 'undefined') {
+                            AuthHelper.logout();
+                        } else {
+                            localStorage.removeItem('nexevent_session');
+                            localStorage.removeItem('nexevent_loggedIn');
+                            window.location.href = 'index.html';
+                        }
+                    } catch (error) {
+                        console.error('Error deleting account:', error);
+                        if (!user.id && !user._id) {
+                            let users = JSON.parse(localStorage.getItem('nexevent_users') || '[]');
+                            users = users.filter(u => u.email !== user.email);
+                            localStorage.setItem('nexevent_users', JSON.stringify(users));
+                            if (typeof AuthHelper !== 'undefined') {
+                                AuthHelper.logout();
+                            } else {
+                                localStorage.removeItem('nexevent_session');
+                                localStorage.removeItem('nexevent_loggedIn');
+                                window.location.href = 'index.html';
+                            }
+                            return;
+                        }
+                        alert('Could not delete account. Please try again. ' + (error.message || ''));
+                    }
+                }
+            });
+            const bookings = JSON.parse(localStorage.getItem('nexevent_bookings') || '[]');
+            const container = document.getElementById('bookingsList');
+
+            if (bookings.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 4rem 0;">
+                        <i class="fa-solid fa-ticket" style="font-size: 4rem; color: var(--glass-border); margin-bottom: 1rem;"></i>
+                        <h3 style="color: var(--text-secondary);">No tickets found</h3>
+                        <p>You haven't booked any events yet. Discover amazing experiences today!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            bookings.sort((a, b) => new Date(b.dateBooked) - new Date(a.dateBooked));
+
+            container.innerHTML = bookings.map(bkg => {
+                const event = bkg.event;
+                const dateObj = new Date(event.date);
+                const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric' });
+
+                return `
+                    <div class="ticket-card">
+                        <img src="${event.image}" class="ticket-img">
+                        <div class="ticket-details">
+                            <div class="ticket-meta">
+                                <div>
+                                    <span class="event-category">${event.category || 'Premium Event'}</span>
+                                    <h3 style="margin-bottom: 0.5rem;">${event.title}</h3>
+                                    <p style="margin: 0; font-size: 0.9rem;"><i class="fa-solid fa-calendar"></i> ${formattedDate} at ${event.time}</p>
+                                    <p style="margin: 0; font-size: 0.9rem;"><i class="fa-solid fa-location-dot"></i> ${event.location}</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <span class="bkg-id">ID: ${bkg.id}</span>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem; margin-top: 1rem;">
+                                <div>
+                                    <p style="margin: 0; color: white;"><strong>${bkg.qty}x ${bkg.tier || 'General'} Admission</strong></p>
+                                    <p style="margin: 0; font-size: 0.8rem; color: var(--text-secondary);">Total Paid: ₹${bkg.total.toFixed(2)}</p>
+                                </div>
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${bkg.id}" class="qr-code" alt="QR Code">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicketArena | Premium Event Management</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Styling -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Animated Background Blobs -->
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+    <!-- Header / Navigation -->
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-ticket"></i> TicketArena
+            </a>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html" class="active">Home</a>
+                <a href="events.html">Events</a>
+            </nav>
+            <div class="nav-actions" style="display:flex; gap:1rem; align-items:center;">
+                <a id="authButton" href="login.html" class="btn btn-outline" style="padding: 0.5rem 1.5rem">Log In</a>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Discover the World's Best Events</h1>
+                <p>Book tickets to concerts, conferences, sports, and exclusive meetups globally. Seamless, fast, and
+                    completely secure.</p>
+
+                <div class="search-bar glass-panel">
+                    <div class="search-input-group">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="heroSearch" placeholder="Search events, artists, or venues...">
+                    </div>
+                    <div class="search-input-group">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <select id="heroLocation"
+                            style="background: transparent; border: none; color: white; font-family: inherit; font-size: 1rem; outline: none; width: 100%; cursor: pointer;">
+                            <option value="" style="color: black;">All Places</option>
+                            <option value="Bengaluru" style="color: black;">Bengaluru</option>
+                            <option value="Goa" style="color: black;">Goa</option>
+                            <option value="Mumbai" style="color: black;">Mumbai</option>
+                            <option value="Delhi" style="color: black;">Delhi</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="btnSearch">Search</button>
+                </div>
+
+                <div class="categories-wrap">
+                    <div class="category-pill glass-panel"><i class="fa-solid fa-music"></i> Music</div>
+                    <div class="category-pill glass-panel"><i class="fa-solid fa-laptop-code"></i> Tech</div>
+                    <div class="category-pill glass-panel"><i class="fa-solid fa-basketball"></i> Sports</div>
+                    <div class="category-pill glass-panel"><i class="fa-solid fa-palette"></i> Arts</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Events Section -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <h2>Trending Events</h2>
+                    <p>Don't miss out on what everyone is talking about.</p>
+                </div>
+                <a href="events.html" class="btn btn-outline">View All <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="event-grid" id="featuredEventsList">
+                <!-- Events will be populated here via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Events Section -->
+    <section class="section-padding" style="background: rgba(255,255,255,0.02); margin-top: 2rem;">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <h2>Upcoming Next Week</h2>
+                    <p>Get your tickets before they sell out completely.</p>
+                </div>
+            </div>
+
+            <div class="event-grid" id="upcomingEventsList">
+                <!-- Events will be populated here via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="#" class="logo" style="margin-bottom: 1rem;"><i class="fa-solid fa-ticket"></i>
+                        TicketArena</a>
+                    <p style="font-size: 0.9rem;">Your premium destination for discovering and booking tickets to the
+                        most exclusive events worldwide.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Explore</h4>
+                    <div class="footer-links">
+                        <a href="index.html">Home</a>
+                        <a href="events.html">All Events</a>
+                        <a href="#">Categories</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <div class="footer-links">
+                        <a href="#">Help Center</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Contact Us</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Subscribe</h4>
+                    <p style="font-size: 0.9rem;">Get the latest updates on events.</p>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                        <input type="email" placeholder="Email Address"
+                            style="padding: 0.8rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; width: 100%;">
+                        <button class="btn btn-primary" style="padding: 0.8rem;"><i
+                                class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 TicketArena. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
