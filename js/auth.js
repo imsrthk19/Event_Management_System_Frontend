@@ -1,7 +1,10 @@
 // nexevent_users : Array of user objects { id, name, email, password }
 // nexevent_session : Current logged in user object or null
 
-const API_BASE_URL = 'http://localhost:8006/api/v1';
+if (!window.API_BASE_URL) {
+    window.API_BASE_URL = 'https://event-management-project-sd.onrender.com/api/v1';
+}
+const API_BASE_URL = window.API_BASE_URL;
 
 const AuthHelper = {
     getUsers: () => JSON.parse(localStorage.getItem('nexevent_users') || '[]'),
