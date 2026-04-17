@@ -1,7 +1,3 @@
-/* ===============================
-DEFAULT EVENTS
-=============================== */
-
 const defaultEvents = [
 
     {
@@ -36,10 +32,6 @@ const defaultEvents = [
 
 ];
 
-
-/* ===============================
-LOAD ADMIN EVENTS
-=============================== */
 
 const API_BASE_URL = 'http://localhost:8006/api/v1';
 
